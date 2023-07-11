@@ -47,7 +47,8 @@ RUN apt-get update && \
 #COPY [".", "/workspace"]
 #WORKDIR /workspace
 
-# docker run --gpus all -itd --name video -v $PWD:/workspace -p 8000:12231 video_image
+# docker run --gpus all -itd --name video -v $PWD:/workspace -p 12231:8000 video_image
+# docker run --gpus all -itd --name ai_container -v $PWD:/app -p 12231:8000 ai_image
 # docker run --gpus all -itd --name video -v $PWD/video2x:/workspace -p 8000:12231 k4yt3x/video2x:latest /bin/bash
 # docker run --gpus all -it --rm --name video -v $PWD:/workspace -p 8000:12231 video_image bash
 #docker pull k4yt3x/video2x:latest
