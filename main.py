@@ -1,3 +1,5 @@
+import os
+
 import uvicorn
 from fastapi import FastAPI, HTTPException
 import boto3
@@ -18,6 +20,7 @@ s3 = boto3.client(
 
 
 def download_file_from_s3(key):
+    os.makedirs(os.path.dirname(key), exist_ok=True)
     try:
         s3.download_file(Bucket=S3_BUCKET_NAME, Key=key, Filename=key)
         return True
@@ -26,6 +29,7 @@ def download_file_from_s3(key):
 
 
 def upload_file_to_s3(key):
+    os.makedirs(os.path.dirname(key), exist_ok=True)
     try:
         s3.upload_file(Filename=key, Bucket=S3_BUCKET_NAME, Key=key)
         return True
