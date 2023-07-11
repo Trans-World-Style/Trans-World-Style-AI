@@ -118,6 +118,7 @@ class Video2X:
         :param path Path: video file path
         :raises RuntimeError: raised when video stream isn't found
         """
+        print(f"-------------------------------\npath: {path}")
         # probe video file info
         logger.info("Reading input video information")
         for stream in ffmpeg.probe(path)["streams"]:
