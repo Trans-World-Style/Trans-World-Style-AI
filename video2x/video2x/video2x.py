@@ -57,13 +57,13 @@ from rich.progress import (
 )
 from rich.text import Text
 
-from video2x.processor import Processor
+from video2x.video2x.processor import Processor
 
 from . import __version__
-from .decoder import VideoDecoder, VideoDecoderThread
-from .encoder import VideoEncoder
-from .interpolator import Interpolator, InterpolatorProcessor
-from .upscaler import Upscaler, UpscalerProcessor
+from video2x.video2x.decoder import VideoDecoder, VideoDecoderThread
+from video2x.video2x.encoder import VideoEncoder
+from video2x.video2x.interpolator import Interpolator, InterpolatorProcessor
+from video2x.video2x.upscaler import Upscaler, UpscalerProcessor
 
 # for desktop environments only
 # if pynput can be loaded, enable global pause hotkey support
