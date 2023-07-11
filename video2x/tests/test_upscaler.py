@@ -11,16 +11,16 @@ from PIL import Image
 from video2x import Upscaler, Video2X
 
 
-def test_upscaling():
+def test_upscaling(input_url, output_url, height):
     video2x = Video2X()
-    output_path = Path("./tests/data/output2160srmd.mp4")
+    output_path = Path(input_url)
     # realsr: gpu 안씀
     algorithm = ['realcugan', "waifu2x", "realsr"]
     video2x.upscale(
-        Path("./tests/data/winter.mp4"),
+        Path(output_url),
         output_path,
-        2160,
         None,
+        height,
         3,
         3,
         0,
