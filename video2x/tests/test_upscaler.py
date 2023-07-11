@@ -13,11 +13,11 @@ from video2x.video2x import Upscaler, Video2X
 
 def test_upscaling(input_url='./video2x/tests/data/jerry.mp4', output_url='./video2x/tests/data/jerry_out.mp4', height=1080):
     video2x = Video2X()
-    output_path = Path(input_url)
+    output_path = Path(output_url)
     # realsr: gpu 안씀
     algorithm = ['realcugan', "waifu2x", "realsr"]
     video2x.upscale(
-        Path(output_url),
+        Path(input_url),
         output_path,
         None,
         height,
