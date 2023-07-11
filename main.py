@@ -51,16 +51,20 @@ def process_file(key):
 
 @app.post("/process_video")
 def process_video(key: str):
+    import time
+    st = time.time()
+
     download_successful = download_file_from_s3(key)
     if not download_successful:
         return HTTPException(status_code=500, detail="S3 download failed")
 
     new_key = process_file(key)
 
-    # upload_successful = upload_file_to_s3(new_key)
-    # if not upload_successful:
-    #     return HTTPException(status_code=500, detail="S3 upload failed")
+    upload_successful = upload_file_to_s3(new_key)
+    if not upload_successful:
+        return HTTPException(status_code=500, detail="S3 upload failed")
 
+    print(f'api running time: {time.time() - st}')
     return {"status": "successful"}
 
 
