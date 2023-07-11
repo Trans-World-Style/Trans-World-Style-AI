@@ -17,3 +17,5 @@ EXPOSE 8000
 
 # Run the command to start uvicorn
 CMD ["uvicorn", "main:app", "--host", "0.0.0.0", "--port", "8000"]
+
+# docker run --gpus all -itd --name ai_container -v $PWD:/app -p 12531:8000 ai_image
