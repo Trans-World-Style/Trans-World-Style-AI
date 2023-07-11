@@ -11,7 +11,7 @@ from PIL import Image
 from video2x.video2x import Upscaler, Video2X
 
 
-def test_upscaling(input_url, output_url, height):
+def test_upscaling(input_url='./video2x/tests/data/jerry.mp4', output_url='./video2x/tests/data/jerry_out.mp4', height=1080):
     video2x = Video2X()
     output_path = Path(input_url)
     # realsr: gpu 안씀
