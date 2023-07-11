@@ -1,1 +1,0 @@
-# Trans-World-Style-AI
