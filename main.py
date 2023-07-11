@@ -53,13 +53,13 @@ def process_file(key):
 def process_video(key: str):
     download_successful = download_file_from_s3(key)
     if not download_successful:
-        raise HTTPException(status_code=500, detail="S3 download failed")
+        return HTTPException(status_code=500, detail="S3 download failed")
 
     new_key = process_file(key)
 
-    upload_successful = upload_file_to_s3(new_key)
-    if not upload_successful:
-        raise HTTPException(status_code=500, detail="S3 upload failed")
+    # upload_successful = upload_file_to_s3(new_key)
+    # if not upload_successful:
+    #     return HTTPException(status_code=500, detail="S3 upload failed")
 
     return {"status": "successful"}
 
