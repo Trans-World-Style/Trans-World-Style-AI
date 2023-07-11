@@ -8,7 +8,7 @@ from pathlib import Path
 
 import video2x.tests.utils as utils
 from PIL import Image
-from video2x import Upscaler, Video2X
+from video2x.video2x import Upscaler, Video2X
 
 
 def test_upscaling(input_url, output_url, height):
