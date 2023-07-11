@@ -119,6 +119,8 @@ class Video2X:
         :raises RuntimeError: raised when video stream isn't found
         """
         print(f"-------------------------------\npath: {path}")
+        import os
+        print(os.listdir(os.path.dirname(path)))
         # probe video file info
         logger.info("Reading input video information")
         for stream in ffmpeg.probe(path)["streams"]:
