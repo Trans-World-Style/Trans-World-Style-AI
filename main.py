@@ -1,3 +1,4 @@
+import multiprocessing
 import os
 
 import uvicorn
@@ -37,14 +38,12 @@ def upload_file_to_s3(key):
         return False
 
 
-def process_file(key):
+def process_file(key, new_key):
     # Placeholder for AI processing
-    new_key = 'output/' + key.split('/')[-1]
-    print(f'new_key: {new_key}')
     try:
         test_upscaling(input_url=key, output_url=new_key, height=1080)
     except Exception as e:
-        print(e)
+            print(e)
     return new_key
 
 
@@ -57,7 +56,14 @@ def process_video(key: str):
     if not download_successful:
         return HTTPException(status_code=500, detail="S3 download failed")
 
-    new_key = process_file(key)
+    try:
+        new_key = 'output/' + key.split('/')[-1]
+        video_process = multiprocessing.Process(target=process_file, args=(key, new_key,))
+        video_process.start()
+        video_process.join()
+        new_key = process_file(key)
+    except Exception as e:
+        print(e)
 
     upload_successful = upload_file_to_s3(new_key)
     if not upload_successful:
