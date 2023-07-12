@@ -41,7 +41,7 @@ def process_file(key):
     # Placeholder for AI processing
     new_key = 'output/' + key.split('/')[-1]
     try:
-        test_upscaling(key, new_key, 1080)
+        test_upscaling(input_url=key, output_url=new_key, height=1080)
     except Exception as e:
         print(e)
     return new_key
