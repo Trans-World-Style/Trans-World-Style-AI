@@ -3,7 +3,7 @@ from video2x.tests.test_upscaler import test_upscaling
 import time
 
 st = time.time()
-test_upscaling()
+test_upscaling(input_url=r'upload/2023-07-03-140109sea.mp4', output_url=r'output/2023-07-03-140109sea.mp4')
 print(f'running time: {time.time() - st}')
 
 # 17103.15162587166 (2, 8K)
