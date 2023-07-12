@@ -40,6 +40,7 @@ def upload_file_to_s3(key):
 def process_file(key):
     # Placeholder for AI processing
     new_key = 'output/' + key.split('/')[-1]
+    print(f'new_key: {new_key}')
     try:
         test_upscaling(input_url=key, output_url=new_key, height=1080)
     except Exception as e:
