@@ -56,12 +56,11 @@ def process_video(key: str):
     if not download_successful:
         return HTTPException(status_code=500, detail="S3 download failed")
 
+    new_key = 'output/' + key.split('/')[-1]
     try:
-        new_key = 'output/' + key.split('/')[-1]
         video_process = multiprocessing.Process(target=process_file, args=(key, new_key,))
         video_process.start()
         video_process.join()
-        new_key = process_file(key)
     except Exception as e:
         print(e)
 
