@@ -48,7 +48,7 @@ def process_file(key):
     return new_key
 
 
-@app.post("/process_video")
+@app.post("/process_video", include_in_schema=False)
 def process_video(key: str):
     import time
     st = time.time()
