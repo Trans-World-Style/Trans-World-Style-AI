@@ -1,0 +1,12 @@
+version: '3.7'
+
+services:
+  ai_service:
+    build:
+      context: .
+    container_name: ai
+    ports:
+      - 12530:8000
+      - 12539:22
+    stdin_open: true
+    tty: true
