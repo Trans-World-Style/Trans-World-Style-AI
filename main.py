@@ -69,7 +69,7 @@ def process_video(key: str):
         return HTTPException(status_code=500, detail="S3 upload failed")
 
     print(f'api running time: {time.time() - st}')
-    return {"status": "successful"}
+    return {"status": "successful", "result": new_key}
 
 
 if __name__ == "__main__":
