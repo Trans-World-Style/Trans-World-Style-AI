@@ -15,22 +15,22 @@ services:
         reservations:
           devices:
             - driver: nvidia
-              count: 1
+              count: 2
               capabilities: [ gpu ]
 
-  upscale_service2:
-    build:
-      context: .
-    container_name: ai2
-    ports:
-      - "12630:8000"
-      - "12639:22"
-    stdin_open: true
-    tty: true
-    deploy:
-      resources:
-        reservations:
-          devices:
-            - driver: nvidia
-              count: 1
-              capabilities: [ gpu ]
+#  upscale_service2:
+#    build:
+#      context: .
+#    container_name: ai2
+#    ports:
+#      - "12630:8000"
+#      - "12639:22"
+#    stdin_open: true
+#    tty: true
+#    deploy:
+#      resources:
+#        reservations:
+#          devices:
+#            - driver: nvidia
+#              count: 1
+#              capabilities: [ gpu ]
