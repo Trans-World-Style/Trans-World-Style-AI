@@ -21,7 +21,7 @@ services:
   upscale_service2:
     build:
       context: .
-    container_name: ai
+    container_name: ai2
     ports:
       - "12630:8000"
       - "12639:22"
