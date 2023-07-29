@@ -10,13 +10,13 @@ services:
       - "12539:22"
     stdin_open: true
     tty: true
-    deploy:
-      resources:
-        reservations:
-          devices:
-            - driver: nvidia
-              count: 2
-              capabilities: [ gpu ]
+#    deploy:
+#      resources:
+#        reservations:
+#          devices:
+#            - driver: nvidia
+#              count: 2
+#              capabilities: [ gpu ]
 
 #  upscale_service2:
 #    build:
