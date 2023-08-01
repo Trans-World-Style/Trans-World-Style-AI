@@ -9,9 +9,9 @@ from video2x.tests.test_upscaler import test_upscaling
 
 app = FastAPI()
 
-S3_BUCKET_NAME = "trans-world-style"
-AWS_ACCESS_KEY = "AKIA4NJHVZKRCWWUG5KJ"
-AWS_SECRET_KEY = "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"
+S3_BUCKET_NAME = os.getenv('S3_BUCKET_NAME')
+AWS_ACCESS_KEY = os.getenv('AWS_ACCESS_KEY')
+AWS_SECRET_KEY = os.getenv('AWS_SECRET_KEY')
 
 s3 = boto3.client(
     's3',
