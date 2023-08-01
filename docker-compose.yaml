@@ -8,25 +8,6 @@ services:
       context: .
     ports:
       - "${PORT}:8000"
-    deploy:
-      resources:
-        reservations:
-          devices:
-            - driver: nvidia
-              count: ${GPU_COUNT}
-              capabilities: [ gpu ]
-#    stdin_open: true
-#    tty: true
-
-#  upscale_service2:
-#    build:
-#      context: .
-#    container_name: ai2
-#    ports:
-#      - "12630:8000"
-#      - "12639:22"
-#    stdin_open: true
-#    tty: true
 #    deploy:
 #      resources:
 #        reservations:
@@ -34,3 +15,5 @@ services:
 #            - driver: nvidia
 #              count: 1
 #              capabilities: [ gpu ]
+#    stdin_open: true
+#    tty: true
