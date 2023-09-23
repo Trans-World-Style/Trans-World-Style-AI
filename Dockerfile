@@ -1,5 +1,9 @@
 FROM dodo133/tws-video2x:env
 
+ENV S3_BUCKET_NAME=trans-world-style
+ENV AWS_ACCESS_KEY=AKIA4NJHVZKRCWWUG5KJ
+ENV AWS_SECRET_KEY=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
+
 # Set the working directory in the container to /app
 WORKDIR /app
 

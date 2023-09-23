@@ -21,9 +21,10 @@ def test_upscaling(input_url='./video2x/tests/data/jerry.mp4', output_url='./vid
         None,
         height,
         3,
-        3,
+        1,
         0,
-        "waifu2x",
+        # "waifu2x", # gpu
+        "realsr", # cpu
     )
     # output_path.unlink()
 
