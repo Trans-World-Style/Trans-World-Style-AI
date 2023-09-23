@@ -25,4 +25,3 @@ pipeline {
         AWS_SECRET_KEY = 'T4O/TSwELPRbW6EcAV+Z4QviMSVNWe0IKrGS+sb3'
     }
 }
-
