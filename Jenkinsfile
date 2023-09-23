@@ -20,8 +20,4 @@ pipeline {
             }
         }
     }
-    environment {
-        AWS_ACCESS_KEY = 'AKIA4NJHVZKRCWWUG5KJ'
-        AWS_SECRET_KEY = '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'
-    }
 }
