@@ -15,8 +15,14 @@ pipeline {
                     image: docker:20.10-dind
                     command: ["dockerd"]
                     args: ["--host=unix:///var/run/docker.sock", "--host=tcp://0.0.0.0:2375"]
+                    volumeMounts:
+                      - mountPath: "/var/lib/docker"
+                        name: "docker-graph-storage"
                   securityContext:
                     privileged: true
+                  volumes:
+                    - name: docker-graph-storage
+                      emptyDir: {}
                 """
         }
     }
