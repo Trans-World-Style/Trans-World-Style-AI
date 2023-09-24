@@ -13,7 +13,7 @@ pipeline {
                   containers:
                   - name: kaniko
                     image: gcr.io/kaniko-project/executor:latest
-                    args: ["--context=dir://workspace", "--dockerfile=Dockerfile", "--destination=${DOCKERHUB_USER}/tws-ai:latest"]
+                    tty: true
                     volumeMounts:
                       - mountPath: "/kaniko/.docker/"
                         name: "docker-config"
