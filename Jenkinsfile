@@ -61,11 +61,6 @@ pipeline {
               containers:
               - name: kaniko
                 image: gcr.io/kaniko-project/executor:latest
-                command:
-                - /bin/sh
-                - -c
-                - while true; do sleep 10; done
-                tty: true
                 volumeMounts:
                   - name: dockerhub-secret
                     mountPath: /secret/
