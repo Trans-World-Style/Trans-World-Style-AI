@@ -12,8 +12,8 @@ pipeline {
                     sh """
                         echo 'test run!!!!'
                     """
-                    withKubeConfig([credentialsId: jenkins-admin]) {
-                        sh 'kubectl get nodes -n prod'
+                    withKubeConfig([]) {
+                        sh 'kubectl get nodes'
                     }
                 }
             }
