@@ -84,17 +84,17 @@ pipeline {
                 spec:
                 containers:
                 - name: kaniko
-                    image: gcr.io/kaniko-project/executor:debug
-                    command:
-                    - /busybox/cat
-                    imagePullPolicy: Always
-                    tty: true
-                    volumeMounts:
-                    - name: jenkins-docker-cfg
+                  image: gcr.io/kaniko-project/executor:debug
+                  command:
+                  - /busybox/cat
+                  imagePullPolicy: Always
+                  tty: true
+                  volumeMounts:
+                  - name: jenkins-docker-cfg
                     mountPath: /kaniko/.docker
                 volumes:
                 - name: jenkins-docker-cfg
-                    projected:
+                  projected:
                     sources:
                     - secret:
                         name: dockerhub-secret
