@@ -19,7 +19,7 @@ pipeline {
                         name: "docker-config"
                   volumes:
                     - name: docker-config
-                      emptyDir: {}  // 일시적인 저장 공간을 제공
+                      emptyDir: {}
                 """
         }
     }
