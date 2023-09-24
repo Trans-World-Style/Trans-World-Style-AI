@@ -13,7 +13,7 @@ pipeline {
                         echo 'test run!!!!'
                     """
                     withKubeConfig([namespace: "prod"]) {
-                        sh 'kubectl get nodes'
+                        sh 'kubectl get po'
                     }
                 }
             }
