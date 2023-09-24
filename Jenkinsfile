@@ -58,16 +58,6 @@ pipeline {
               labels:
                 role: kanikoBuild
             spec:
-              initContainers:
-              - name: init-for-docker-config
-                image: busybox
-                command: ["/bin/sh", "-c", "cp /secret/.dockerconfigjson /mnt/.docker/config.json"]
-                volumeMounts:
-                  - name: docker-config
-                    mountPath: /mnt/
-                  - name: dockerhub-secret
-                    mountPath: /secret
-                    readOnly: true
               containers:
               - name: kaniko
                 image: gcr.io/kaniko-project/executor:latest
@@ -77,6 +67,9 @@ pipeline {
                 volumeMounts:
                   - name: docker-config
                     mountPath: /kaniko/.docker/
+                  - name: dockerhub-secret
+                    mountPath: /secret
+                    readOnly: true
               volumes:
               - name: docker-config
                 emptyDir: {}
