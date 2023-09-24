@@ -87,12 +87,11 @@ pipeline {
                 script {
                     def commitHash = env.GIT_COMMIT
                     def commitMessage = sh(script: "git log -1 --pretty=%B ${commitHash}", returnStdout: true).trim()
-                    echo "Commit Message: ${commitMessage}"
                     def match = commitMessage =~ /tag: (\S+)/
                     if(match) {
                         env.DOCKER_TAG = match[0][1]
                     } else {
-                        error("Tag not found in commit message!")
+                        error("Tag not found in commit message!\ncommit message: ${commitMessage}")
                     }
                     echo "Commit Tag: ${DOCKER_TAG}"
                 }
