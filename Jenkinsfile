@@ -68,7 +68,7 @@ pipeline {
                 container('kaniko') {
                     script {
                             sh """
-                            /kaniko/executor --no-push -v debug
+                            ls
                             """
                     }
                 }
