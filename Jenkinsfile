@@ -71,8 +71,6 @@
 //     }
 // }
 @Library('tws-ci-library') _
-
-def dockerTag = ''
 pipeline {
     agent {
         kubernetes {
@@ -115,7 +113,7 @@ pipeline {
         stage('extract docker tag') {
             steps {
                 script {
-                    extractDockerTag()
+                    env.DOCKER_TAG = extractDockerTag()
                 }
             }
         }
@@ -123,7 +121,7 @@ pipeline {
             steps {
                 container('kaniko') {
                     script {
-                        def imageFullName = "${DOCKERHUB_USERNAME}/${IMAGE_NAME}:${dockerTag}"
+                        def imageFullName = "${DOCKERHUB_USERNAME}/${IMAGE_NAME}:${env.DOCKER_TAG}"
 //                         sh """
 //                         /kaniko/executor --context `pwd` --verbosity debug --destination ${imageFullName} --cache
 //                         """
