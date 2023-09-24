@@ -117,9 +117,8 @@ pipeline {
                 container('kaniko') {
                     script {
 //                         buildAndPush(DOCKERHUB_USERNAME, IMAGE_NAME, env.DOCKER_TAG)
-                        sh """
-                        -c ls /kaniko/.docker
-                        """
+                        sh "ls /kaniko/.docker"
+
                         sh """
                         echo '${DOCKERHUB_USERNAME}/${IMAGE_NAME}:${env.DOCKER_TAG}'
                         """
