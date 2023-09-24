@@ -71,8 +71,9 @@
 //     }
 // }
 @Library('tws-ci-library') _
+def kanikoAgent = getKanikoAgent()
 pipeline {
-    agent getKanikoAgent()
+    agent kanikoAgent
     environment {
         DOCKERHUB_USERNAME = 'dodo133' // Docker Hub의 사용자 이름을 여기에 넣으세요.
         IMAGE_NAME = 'tws-ai' // 원하는 이미지 이름을 여기에 넣으세요.
