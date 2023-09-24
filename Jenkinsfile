@@ -74,18 +74,18 @@ pipeline {
                 container('kaniko') {
                     script {
                         def imageFullName = "${DOCKERHUB_USERNAME}/${IMAGE_NAME}:latest"
-                        sh """
-                        echo 'un: `pwd`'
-                        """
+//                         sh """
+//                         echo 'un: `pwd`'
+//                         """
 //                         sh """
 //                         /kaniko/executor \\
 //                             --context ${WORKSPACE} \\
 //                             --dockerfile ${WORKSPACE}/Dockerfile \\
 //                             --destination ${imageFullName}
 //                         """
-//                         sh """
-//                         /kaniko/executor --context `pwd` --verbosity debug --destination ${imageFullName}
-//                         """
+                        sh """
+                        /kaniko/executor --context `pwd` --verbosity debug --destination ${imageFullName}
+                        """
                     }
                 }
             }
