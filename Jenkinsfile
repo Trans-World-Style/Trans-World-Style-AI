@@ -73,12 +73,9 @@ pipeline {
             steps {
                 container('kaniko') {
                     script {
-//                         def imageFullName = "${DOCKERHUB_USERNAME}/${IMAGE_NAME}:${gitCommit}"
+                        def imageFullName = "${DOCKERHUB_USERNAME}/${IMAGE_NAME}:${gitCommit}"
                         sh """
-                        echo 'pwd: ${PWD}'
-                        """
-                        sh """
-                        echo 'un: ${DOCKERHUB_USERNAME}'
+                        echo 'un: ${imageFullName}'
                         """
 //                         sh """
 //                         /kaniko/executor \\
