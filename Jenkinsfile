@@ -101,12 +101,12 @@ pipeline {
             steps {
                 container('kaniko') {
                     script {
-                        def imageFullName = "${DOCKERHUB_USERNAME}/${IMAGE_NAME}:latest"
+                        def imageFullName = "${DOCKERHUB_USERNAME}/${IMAGE_NAME}:${DOCKER_TAG}"
 //                         sh """
 //                         /kaniko/executor --context `pwd` --verbosity debug --destination ${imageFullName} --cache
 //                         """
                         sh """
-                        echo '${IMAGE_NAME}'
+                        echo '${imageFullName}'
                         """
                     }
                 }
