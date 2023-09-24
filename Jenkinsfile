@@ -28,10 +28,12 @@ pipeline {
     stages {
         stage('Build and Push') {
             steps {
-                script {
-                    def dockerImage = docker.build("${DOCKERHUB_USER}/tws-ai")
-                    docker.withRegistry('https://registry.hub.docker.com', 'dockerhub-credentials') {
-                        dockerImage.push('latest')
+                container('docker') {
+                    script {
+                        def dockerImage = docker.build("${DOCKERHUB_USER}/tws-ai")
+                        docker.withRegistry('https://registry.hub.docker.com', 'dockerhub-credentials') {
+                            dockerImage.push('latest')
+                        }
                     }
                 }
             }
