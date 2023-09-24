@@ -1,7 +1,7 @@
 pipeline {
     agent {
         kubernetes {
-            clout "kubernetes-docker-job"
+            cloud "kubernetes-docker-job"
             yaml """
                 apiVersion: v1
                 kind: Pod
