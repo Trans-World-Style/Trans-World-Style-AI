@@ -68,7 +68,10 @@ pipeline {
                 container('kaniko') {
                     script {
                             sh """
-                            ls
+                            pwd
+                            """
+                            sh """
+                            env
                             """
                     }
                 }
