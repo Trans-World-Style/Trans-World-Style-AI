@@ -69,7 +69,7 @@ pipeline {
                     projected:
                       sources:
                       - secret:
-                          name: docker-credentials
+                          name: dockerhub-secret
                           items:
                             - key: .dockerconfigjson
                               path: config.json
@@ -86,15 +86,6 @@ pipeline {
                 container('kaniko') {
                     script {
                         def imageFullName = "${DOCKERHUB_USERNAME}/${IMAGE_NAME}:latest"
-//                         sh """
-//                         echo 'un: `pwd`'
-//                         """
-//                         sh """
-//                         /kaniko/executor \\
-//                             --context ${WORKSPACE} \\
-//                             --dockerfile ${WORKSPACE}/Dockerfile \\
-//                             --destination ${imageFullName}
-//                         """
                         sh """
                         /kaniko/executor --context `pwd` --verbosity debug --destination ${imageFullName}
                         """
