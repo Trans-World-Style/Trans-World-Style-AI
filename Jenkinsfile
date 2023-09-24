@@ -91,6 +91,10 @@ pipeline {
             """
         }
     }
+    environment {
+        DOCKERHUB_USER = credentials('dockerhub-username')
+        DOCKERHUB_PASS = credentials('dockerhub-password')
+    }
     stages {
         stage('Build and Push Image') {
             steps {
