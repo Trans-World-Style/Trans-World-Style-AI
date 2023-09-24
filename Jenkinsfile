@@ -64,6 +64,10 @@ pipeline {
                 '''
         }
     }
+    environment {
+        DOCKERHUB_USERNAME = 'dodo133' // Docker Hub의 사용자 이름을 여기에 넣으세요.
+        IMAGE_NAME = 'tws-ai' // 원하는 이미지 이름을 여기에 넣으세요.
+    }
     stages {
         stage('Build and Push') {
             steps {
@@ -71,7 +75,7 @@ pipeline {
                     script {
 //                         def imageFullName = "${DOCKERHUB_USERNAME}/${IMAGE_NAME}:${gitCommit}"
                         sh """
-                        env
+                        echo 'un: $DOCKERHUB_USERNAME'
                         """
 //                         sh """
 //                         /kaniko/executor \\
