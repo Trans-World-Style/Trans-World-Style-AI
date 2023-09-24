@@ -72,39 +72,7 @@
 // }
 @Library('tws-ci-library') _
 pipeline {
-    agent {
-        kubernetes {
-            // Kaniko executor 이미지를 사용하여 파드 템플릿을 정의합니다.
-            cloud "kubernetes-docker-job"
-            yaml '''
-                apiVersion: v1
-                kind: Pod
-                metadata:
-                  labels:
-                    role: kaniko
-                spec:
-                  containers:
-                  - name: kaniko
-                    image: gcr.io/kaniko-project/executor:debug
-                    command:
-                    - /busybox/cat
-                    imagePullPolicy: Always
-                    tty: true
-                    volumeMounts:
-                    - name: jenkins-docker-cfg
-                      mountPath: /kaniko/.docker
-                  volumes:
-                  - name: jenkins-docker-cfg
-                    projected:
-                      sources:
-                      - secret:
-                          name: dockerhub-secret
-                          items:
-                            - key: .dockerconfigjson
-                              path: config.json
-                '''
-        }
-    }
+    agent getKanikoAgent()
     environment {
         DOCKERHUB_USERNAME = 'dodo133' // Docker Hub의 사용자 이름을 여기에 넣으세요.
         IMAGE_NAME = 'tws-ai' // 원하는 이미지 이름을 여기에 넣으세요.
@@ -121,12 +89,9 @@ pipeline {
             steps {
                 container('kaniko') {
                     script {
-                        def imageFullName = "${DOCKERHUB_USERNAME}/${IMAGE_NAME}:${env.DOCKER_TAG}"
-//                         sh """
-//                         /kaniko/executor --context `pwd` --verbosity debug --destination ${imageFullName} --cache
-//                         """
+//                         buildAndPush(DOCKERHUB_USERNAME, IMAGE_NAME, env.DOCKER_TAG)
                         sh """
-                        echo '${imageFullName}'
+                        echo '${DOCKERHUB_USERNAME}/${IMAGE_NAME}:${env.DOCKER_TAG}'
                         """
                     }
                 }
