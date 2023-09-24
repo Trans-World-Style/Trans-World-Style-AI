@@ -69,7 +69,6 @@ pipeline {
             steps {
                 container('kaniko') {
                     script {
-                        def gitCommit = sh(script: 'git rev-parse --short HEAD', returnStdout: true).trim()
                         def imageFullName = "${DOCKERHUB_USERNAME}/${IMAGE_NAME}:${gitCommit}"
                         sh """
                         echo 'user name: $DOCKERHUB_USERNAME'
