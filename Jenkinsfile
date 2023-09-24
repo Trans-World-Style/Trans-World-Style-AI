@@ -13,7 +13,7 @@ pipeline {
                   containers:
                   - name: kaniko
                     image: gcr.io/kaniko-project/executor:latest
-                    tty: true
+                    args: ["--context=dir://workspace", "--dockerfile=Dockerfile", "--destination=dodo133/tws-ai:latest"]
                     volumeMounts:
                       - mountPath: "/kaniko/.docker/"
                         name: "docker-config"
@@ -30,10 +30,16 @@ pipeline {
                     withCredentials([usernamePassword(credentialsId: 'dockerhub-credentials', usernameVariable: 'DOCKERHUB_USER', passwordVariable: 'DOCKERHUB_PASS')]) {
                         script {
                             sh """
-                                echo '{ "auths": { "https://index.docker.io/v1/": { "auth": "$DOCKERHUB_USER:$DOCKERHUB_PASS" } } }' > /kaniko/.docker/config.json
+                            echo '$DOCKERHUB_USER'
                             """
-                            // 이미지 빌드 및 푸시
-                            sh "/kaniko/executor --context dir://workspace --dockerfile=Dockerfile --destination=${DOCKERHUB_USER}/tws-ai:latest"
+                            sh """
+                            echo '$DOCKERHUB_PASS'
+                            """
+//                             sh """
+//                                 echo '{ "auths": { "https://index.docker.io/v1/": { "auth": "$DOCKERHUB_USER:$DOCKERHUB_PASS" } } }' > /kaniko/.docker/config.json
+//                             """
+//                             // 이미지 빌드 및 푸시
+//                             sh "/kaniko/executor --context dir://workspace --dockerfile=Dockerfile --destination=${DOCKERHUB_USER}/tws-ai:latest"
                         }
                     }
                 }
