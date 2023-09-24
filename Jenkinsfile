@@ -61,7 +61,7 @@ pipeline {
               initContainers:
               - name: init-for-docker-config
                 image: busybox
-                command: ["/bin/sh", "-c", "echo '{ \"auths\": { \"https://index.docker.io/v1/\": { \"auth\": \"${DOCKERHUB_USER}:${DOCKERHUB_PASS}\" } } }' > /mnt/.docker/config.json"]
+                    command: ["/bin/sh", "-c", "echo '{ \"auths\": { \"https://index.docker.io/v1/\": { \"auth\": \"$DOCKERHUB_USER:$DOCKERHUB_PASS\" } } }' > /mnt/.docker/config.json"]
                 env:
                 - name: DOCKERHUB_USER
                   valueFrom:
@@ -90,10 +90,6 @@ pipeline {
                 emptyDir: {}
             """
         }
-    }
-    environment {
-        DOCKERHUB_USER = credentials('dockerhub-username')
-        DOCKERHUB_PASS = credentials('dockerhub-password')
     }
     stages {
         stage('Build and Push Image') {
