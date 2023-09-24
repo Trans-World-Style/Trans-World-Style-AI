@@ -75,7 +75,10 @@ pipeline {
                     script {
 //                         def imageFullName = "${DOCKERHUB_USERNAME}/${IMAGE_NAME}:${gitCommit}"
                         sh """
-                        echo 'un: $DOCKERHUB_USERNAME'
+                        echo 'pwd: ${PWD}'
+                        """
+                        sh """
+                        echo 'un: ${DOCKERHUB_USERNAME}'
                         """
 //                         sh """
 //                         /kaniko/executor \\
