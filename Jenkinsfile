@@ -13,9 +13,8 @@ pipeline {
                   containers:
                   - name: docker
                     image: docker:dind
-                    command:
-                    - cat
-                    tty: true
+                    command: ["dockerd"]
+                    args: ["--host=unix:///var/run/docker.sock", "--host=tcp://0.0.0.0:2375"]
                   securityContext:
                     privileged: true
                 """
