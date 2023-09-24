@@ -84,9 +84,9 @@ pipeline {
         stage('prepare') {
             steps {
                 script {
-                    sh """
                     env
-                    """
+                    def commitMessage = sh(script: 'git log -1 --pretty=%B', returnStdout: true).trim()
+                    echo "Commit Message: ${commitMessage}"
                 }
             }
         }
