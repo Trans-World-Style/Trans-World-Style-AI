@@ -61,21 +61,13 @@ pipeline {
               initContainers:
               - name: init-for-docker-config
                 image: busybox
-                    command: ["/bin/sh", "-c", "echo '{ \"auths\": { \"https://index.docker.io/v1/\": { \"auth\": \"''${DOCKERHUB_USER}'':''${DOCKERHUB_PASS}''\" } } }' > /mnt/.docker/config.json"]
-                env:
-                - name: DOCKERHUB_USER
-                  valueFrom:
-                    secretKeyRef:
-                      name: dockerhub-secret
-                      key: username
-                - name: DOCKERHUB_PASS
-                  valueFrom:
-                    secretKeyRef:
-                      name: dockerhub-secret
-                      key: password
+                command: ["/bin/sh", "-c", "cp /secret/.dockerconfigjson /mnt/.docker/config.json"]
                 volumeMounts:
                   - name: docker-config
                     mountPath: /mnt/
+                  - name: dockerhub-secret
+                    mountPath: /secret
+                    readOnly: true
               containers:
               - name: kaniko
                 image: gcr.io/kaniko-project/executor:latest
@@ -88,6 +80,9 @@ pipeline {
               volumes:
               - name: docker-config
                 emptyDir: {}
+              - name: dockerhub-secret
+                secret:
+                 secretName: dockerhub-secret
             """
         }
     }
