@@ -94,10 +94,9 @@ pipeline {
                       mountPath: /kaniko/.docker
                   volumes:
                   - name: jenkins-docker-cfg
-                    secret:
-                      name: dockerhub-secret
-                      items:
-                      - key: config.json
+                    secretName: dockerhub-secret
+                    items:
+                    - key: config.json
                 '''
         }
     }
@@ -118,6 +117,9 @@ pipeline {
                 container('kaniko') {
                     script {
 //                         buildAndPush(DOCKERHUB_USERNAME, IMAGE_NAME, env.DOCKER_TAG)
+                        sh """
+                        -c ls /kaniko/.docker
+                        """
                         sh """
                         echo '${DOCKERHUB_USERNAME}/${IMAGE_NAME}:${env.DOCKER_TAG}'
                         """
