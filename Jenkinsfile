@@ -97,7 +97,6 @@ pipeline {
                     secretName: dockerhub-secret
                     items:
                     - key: config.json
-                      path: config.json
                 '''
         }
     }
