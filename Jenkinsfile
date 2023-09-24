@@ -27,11 +27,10 @@ pipeline {
         stage('Build and Push') {
             steps {
                 container('kaniko') {
-                    withCredentials([usernamePassword(credentialsId: 'dockerhub-credentials', usernameVariable: 'DOCKERHUB_USERNAME', passwordVariable: 'DOCKERHUB_PASSWORD')]) {
+                    withCredentials([usernamePassword(credentialsId: 'dockerhub-credentials', usernameVariable: 'DOCKERHUB_USER', passwordVariable: 'DOCKERHUB_PASS')]) {
                         script {
-                            // config.json 생성
                             sh """
-                                echo '{ "auths": { "https://index.docker.io/v1/": { "auth": "$DOCKERHUB_USERNAME:$DOCKERHUB_PASSWORD" } } }' > /kaniko/.docker/config.json
+                                echo '{ "auths": { "https://index.docker.io/v1/": { "auth": "$DOCKERHUB_USER:$DOCKERHUB_PASS" } } }' > /kaniko/.docker/config.json
                             """
                             // 이미지 빌드 및 푸시
                             sh "/kaniko/executor --context dir://workspace --dockerfile=Dockerfile --destination=${DOCKERHUB_USER}/tws-ai:latest"
