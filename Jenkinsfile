@@ -12,7 +12,7 @@ pipeline {
                     sh """
                         echo 'test run!!!!'
                     """
-                    withKubeConfig([credentialsId: c417aa4c-c981-4a8d-bf07-3dae99d29450]) {
+                    withKubeConfig([credentialsId: 3cec874a-babe-40e1-954a-cdcbe3138eb2]) {
                         sh 'kubectl get nodes -n prod'
                     }
                 }
