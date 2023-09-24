@@ -58,7 +58,7 @@ pipeline {
                   - name: kaniko
                     image: gcr.io/kaniko-project/executor:latest
                     command:
-                    - /bin/sh
+                    - sh
                     args:
                     - -c
                     - "sleep infinity"
