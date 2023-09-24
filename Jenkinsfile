@@ -62,7 +62,9 @@ pipeline {
               - name: kaniko
                 image: gcr.io/kaniko-project/executor:latest
                 command:
-                - /busybox/cat
+                - /bin/sh
+                - -c
+                - while true; do sleep 10; done
                 tty: true
                 volumeMounts:
                   - name: dockerhub-secret
