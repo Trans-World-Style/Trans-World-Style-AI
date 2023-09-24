@@ -88,7 +88,7 @@ pipeline {
                     def commitHash = env.GIT_COMMIT
                     def commitMessage = sh(script: "git log -1 --pretty=%B ${commitHash}", returnStdout: true).trim()
                     echo "Commit Message: ${commitMessage}"
-                    def match = commit_message =~ /tag: (\S+)/
+                    def match = commitMessage =~ /tag: (\S+)/
                     if(match) {
                         env.DOCKER_TAG = match[0][1]
                     } else {
