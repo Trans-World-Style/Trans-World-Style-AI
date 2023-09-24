@@ -84,6 +84,10 @@ pipeline {
                         def imageFullName = "${DOCKERHUB_USERNAME}/${IMAGE_NAME}:${gitCommit}"
 
                         sh """
+                        echo 'workspace: ${WORKSPACE}'
+                        """
+
+                        sh """
                         /kaniko/executor \\
                             --context ${WORKSPACE} \\
                             --dockerfile ${WORKSPACE}/Dockerfile \\
