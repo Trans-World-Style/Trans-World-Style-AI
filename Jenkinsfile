@@ -8,36 +8,33 @@ pipeline {
                 metadata:
                   namespace: jenkins
                   labels:
-                    role: dockerBuildPush
+                    role: kanikoBuild
                 spec:
                   containers:
-                  - name: docker
-                    image: docker:20.10-dind
+                  - name: kaniko
+                    image: gcr.io/kaniko-project/executor:latest
+                    args: ["--context=dir://workspace", "--dockerfile=Dockerfile", "--destination=${DOCKERHUB_USER}/tws-ai:latest"]
                     volumeMounts:
-                      - mountPath: "/var/lib/docker"
-                        name: "docker-graph-storage"
-                    tty: true
-                    workingDir: "/home/jenkins"
-                  securityContext:
-                    privileged: true
+                      - mountPath: "/kaniko/.docker/"
+                        name: "docker-config"
                   volumes:
-                    - name: docker-graph-storage
-                      emptyDir: {}
+                    - name: docker-config
+                      emptyDir: {}  // 일시적인 저장 공간을 제공
                 """
         }
-    }
-    environment {
-        DOCKERHUB_USER = 'dodo133'
-//         DOCKERHUB_PASS = 'kay24125@'
     }
     stages {
         stage('Build and Push') {
             steps {
-                container('docker') {
-                    script {
-                        def dockerImage = docker.build("${DOCKERHUB_USER}/tws-ai")
-                        docker.withRegistry('https://registry.hub.docker.com', 'dockerhub-credentials') {
-                            dockerImage.push('latest')
+                container('kaniko') {
+                    withCredentials([usernamePassword(credentialsId: 'dockerhub-credentials', usernameVariable: 'DOCKERHUB_USERNAME', passwordVariable: 'DOCKERHUB_PASSWORD')]) {
+                        script {
+                            // config.json 생성
+                            sh """
+                                echo '{ "auths": { "https://index.docker.io/v1/": { "auth": "$DOCKERHUB_USERNAME:$DOCKERHUB_PASSWORD" } } }' > /kaniko/.docker/config.json
+                            """
+                            // 이미지 빌드 및 푸시
+                            sh "/kaniko/executor --context dir://workspace --dockerfile=Dockerfile --destination=${DOCKERHUB_USER}/tws-ai:latest"
                         }
                     }
                 }
@@ -45,6 +42,7 @@ pipeline {
         }
     }
 }
+
 
 // pull & build & push
 
