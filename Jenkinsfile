@@ -92,17 +92,6 @@ pipeline {
         }
     }
     stages {
-        stage('Make docker config') {
-            withCredentials([usernamePassword(credentialsId: 'dockerhub-credentials', usernameVariable: 'DOCKERHUB_USER', passwordVariable: 'DOCKERHUB_PASS')]) {
-                script {
-                    container('for-docker-config') {
-                        sh """
-                        echo '{ "auths": { "https://index.docker.io/v1/": { "auth": "$DOCKERHUB_USER:$DOCKERHUB_PASS" } } }' > /mnt/.docker/config.json
-                        """
-                    }
-                }
-            }
-        }
         stage('Build and Push Image') {
             steps {
                 script {
