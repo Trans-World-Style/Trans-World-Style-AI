@@ -1,7 +1,7 @@
 pipeline {
     agent any
     stages {
-        stage('Setup and Deploy') {
+        stage('Build') {
             when {
                 anyOf {
                     branch 'main'
@@ -10,16 +10,21 @@ pipeline {
             steps {
                 script {
                     sh """
-                        echo 'test run!!!!'
+                        docker build --platform=linux/amd64 -t dodo133/tws-ai .
                     """
-                    withKubeConfig([namespace: "prod"]) {
-                        sh 'kubectl get po'
-                    }
+                    sh """
+                        docker push dodo133/tws-ai
+                    """
+//                     withKubeConfig([namespace: "prod"]) {
+//                         sh 'kubectl get po'
+//                     }
                 }
             }
         }
     }
 }
+
+// pull & build & push
 
 // pipeline {
 //     agent any
