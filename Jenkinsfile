@@ -81,13 +81,25 @@ pipeline {
         IMAGE_NAME = 'tws-ai' // 원하는 이미지 이름을 여기에 넣으세요.
     }
     stages {
+        stage('prepare') {
+            steps {
+                script {
+                    sh """
+                    env
+                    """
+                }
+            }
+        }
         stage('Build and Push') {
             steps {
                 container('kaniko') {
                     script {
                         def imageFullName = "${DOCKERHUB_USERNAME}/${IMAGE_NAME}:latest"
+//                         sh """
+//                         /kaniko/executor --context `pwd` --verbosity debug --destination ${imageFullName} --cache
+//                         """
                         sh """
-                        /kaniko/executor --context `pwd` --verbosity debug --destination ${imageFullName}
+                        echo '${IMAGE_NAME}'
                         """
                     }
                 }
