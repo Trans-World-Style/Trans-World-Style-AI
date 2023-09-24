@@ -59,42 +59,16 @@ pipeline {
                     image: gcr.io/kaniko-project/executor:latest
                     imagePullPolicy: Always
                     tty: true
-                    volumeMounts:
-                      - name: docker-config
-                        mountPath: /kaniko/.docker
-                  volumes:
-                  - name: docker-config
-                    secret:
-                      secretName: dockerhub-secret
                 '''
         }
     }
-
-    environment {
-        DOCKERHUB_USERNAME = 'dodo133' // Docker Hub의 사용자 이름을 여기에 넣으세요.
-        IMAGE_NAME = 'tws-ai' // 원하는 이미지 이름을 여기에 넣으세요.
-    }
-
     stages {
         stage('Build and Push') {
             steps {
                 container('kaniko') {
                     script {
-//                         def gitCommit = sh(script: 'git rev-parse --short HEAD', returnStdout: true).trim()
-//                         def imageFullName = "${DOCKERHUB_USERNAME}/${IMAGE_NAME}:${gitCommit}"
-//
-//                         sh """
-//                         echo 'workspace: ${WORKSPACE}'
-//                         """
-//
-//                         sh """
-//                         /kaniko/executor \\
-//                             --context ${WORKSPACE} \\
-//                             --dockerfile ${WORKSPACE}/Dockerfile \\
-//                             --destination ${imageFullName}
-//                         """
                             sh """
-                            /kaniko/executor --no-push
+                            /kaniko/executor --no-push -v debug
                             """
                     }
                 }
