@@ -75,7 +75,7 @@ pipeline {
                     script {
                         def imageFullName = "${DOCKERHUB_USERNAME}/${IMAGE_NAME}:latest"
                         sh """
-                        echo 'un: `PWD`'
+                        echo 'un: `pwd`'
                         """
 //                         sh """
 //                         /kaniko/executor \\
