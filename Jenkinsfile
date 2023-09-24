@@ -94,13 +94,10 @@ pipeline {
                       mountPath: /kaniko/.docker
                   volumes:
                   - name: jenkins-docker-cfg
-                    projected:
-                      sources:
-                      - secret:
-                          name: dockerhub-secret
-                          items:
-                            - key: config.json
-                              path: config.json
+                    secretName: dockerhub-secret
+                    items:
+                    - key: config.json
+                      path: config.json
                 '''
         }
     }
