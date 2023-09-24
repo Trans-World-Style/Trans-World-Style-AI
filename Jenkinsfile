@@ -131,7 +131,7 @@
 @Library('tws-ci-library') _
 pipeline {
     agent {
-        label 'kaniko'
+        label 'kaniko-template'
     }
     environment {
         DOCKERHUB_USERNAME = 'dodo133' // Docker Hub의 사용자 이름을 여기에 넣으세요.
