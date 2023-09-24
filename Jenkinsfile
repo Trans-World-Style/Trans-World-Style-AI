@@ -12,25 +12,14 @@ pipeline {
               containers:
               - name: kaniko
                 image: gcr.io/kaniko-project/executor:latest
-                args:
-                - "--dockerfile=${WORKSPACE}/Dockerfile"
-                - "--context=dir://${WORKSPACE}/"
-                - "--destination=dodo133/tws-ai:latest"
-                env:
-                - name: DOCKER_CONFIG
-                  value: "/kaniko/.docker/"
                 volumeMounts:
-                - name: docker-config
-                  mountPath: /kaniko/.docker/
+                  - name: dockerhub-secret
+                    mountPath: /secret/
+                    readOnly: true
               volumes:
-              - name: docker-config
-                projected:
-                  sources:
-                  - secret:
-                      name: dockerhub-secret
-                      items:
-                        - key: .dockerconfigjson
-                          path: config.json
+              - name: dockerhub-secret
+                secret:
+                  secretName: dockerhub-secret
             """
         }
     }
@@ -41,7 +30,10 @@ pipeline {
                     // Dockerfile을 사용하여 이미지를 빌드하고 Docker Hub에 푸시
                     container('kaniko') {
                         sh """
-                        /kaniko/executor
+                            cp /secret/.dockerconfigjson /kaniko/.docker/config.json
+                        """
+                        sh """
+                            /kaniko/executor --context=${WORKSPACE} --dockerfile=${WORKSPACE}/Dockerfile --destination=dodo133/tws-ai:latest
                         """
                     }
                 }
