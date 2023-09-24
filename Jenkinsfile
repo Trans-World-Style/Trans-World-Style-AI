@@ -1,39 +1,95 @@
+// pipeline {
+//     agent {
+//         kubernetes {
+//             cloud "kubernetes-docker-job"
+//             yaml """
+//             apiVersion: v1
+//             kind: Pod
+//             metadata:
+//               labels:
+//                 role: kanikoBuild
+//             spec:
+//               containers:
+//               - name: kaniko
+//                 image: gcr.io/kaniko-project/executor:latest
+//                 volumeMounts:
+//                   - name: dockerhub-secret
+//                     mountPath: /secret/
+//                     readOnly: true
+//               volumes:
+//               - name: dockerhub-secret
+//                 secret:
+//                   secretName: dockerhub-secret
+//             """
+//         }
+//     }
+//     stages {
+//         stage('Build and Push Image') {
+//             steps {
+//                 script {
+//                     // Dockerfile을 사용하여 이미지를 빌드하고 Docker Hub에 푸시
+//                     container('kaniko') {
+//                         sh """
+//                             cp /secret/.dockerconfigjson /kaniko/.docker/config.json
+//                         """
+//                         sh """
+//                             /kaniko/executor --context=${WORKSPACE} --dockerfile=${WORKSPACE}/Dockerfile --destination=dodo133/tws-ai:latest
+//                         """
+//                     }
+//                 }
+//             }
+//         }
+//     }
+// }
+
 pipeline {
     agent {
         kubernetes {
+            // Kaniko executor 이미지를 사용하여 파드 템플릿을 정의합니다.
             cloud "kubernetes-docker-job"
-            yaml """
-            apiVersion: v1
-            kind: Pod
-            metadata:
-              labels:
-                role: kanikoBuild
-            spec:
-              containers:
-              - name: kaniko
-                image: gcr.io/kaniko-project/executor:latest
-                volumeMounts:
-                  - name: dockerhub-secret
-                    mountPath: /secret/
-                    readOnly: true
-              volumes:
-              - name: dockerhub-secret
-                secret:
-                  secretName: dockerhub-secret
-            """
+            yaml '''
+                apiVersion: v1
+                kind: Pod
+                metadata:
+                  labels:
+                    some-label: kaniko
+                spec:
+                  containers:
+                  - name: kaniko
+                    image: gcr.io/kaniko-project/executor:latest
+                    imagePullPolicy: Always
+                    command:
+                    - /busybox/cat
+                    tty: true
+                    volumeMounts:
+                      - name: docker-config
+                        mountPath: /kaniko/.docker
+                  volumes:
+                  - name: docker-config
+                    secret:
+                      secretName: dockerhub-secret
+                '''
         }
     }
+
+    environment {
+        DOCKERHUB_USERNAME = 'dodo133' // Docker Hub의 사용자 이름을 여기에 넣으세요.
+        IMAGE_NAME = 'tws-ai' // 원하는 이미지 이름을 여기에 넣으세요.
+    }
+
     stages {
-        stage('Build and Push Image') {
+        stage('Build and Push') {
             steps {
-                script {
-                    // Dockerfile을 사용하여 이미지를 빌드하고 Docker Hub에 푸시
-                    container('kaniko') {
+                container('kaniko') {
+                    script {
+                        def gitCommit = sh(script: 'git rev-parse --short HEAD', returnStdout: true).trim()
+                        def imageFullName = "${DOCKERHUB_USERNAME}/${IMAGE_NAME}:${gitCommit}"
+
                         sh """
-                            cp /secret/.dockerconfigjson /kaniko/.docker/config.json
-                        """
-                        sh """
-                            /kaniko/executor --context=${WORKSPACE} --dockerfile=${WORKSPACE}/Dockerfile --destination=dodo133/tws-ai:latest
+                        /kaniko/executor \\
+                            --context ${WORKSPACE} \\
+                            --dockerfile ${WORKSPACE}/Dockerfile \\
+                            --destination ${imageFullName}
                         """
                     }
                 }
