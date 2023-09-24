@@ -79,6 +79,7 @@ pipeline {
     environment {
         DOCKERHUB_USERNAME = 'dodo133' // Docker Hub의 사용자 이름을 여기에 넣으세요.
         IMAGE_NAME = 'tws-ai' // 원하는 이미지 이름을 여기에 넣으세요.
+        DOCKER_TAG = ''
     }
     stages {
         stage('prepare') {
@@ -87,6 +88,13 @@ pipeline {
                     def commitHash = env.GIT_COMMIT
                     def commitMessage = sh(script: "git log -1 --pretty=%B ${commitHash}", returnStdout: true).trim()
                     echo "Commit Message: ${commitMessage}"
+                    def match = commit_message =~ /tag: (\S+)/
+                    if(match) {
+                        env.DOCKER_TAG = match[0][1]
+                    } else {
+                        error("Tag not found in commit message!")
+                    }
+                    echo "Commit Tag: ${DOCKER_TAG}"
                 }
             }
         }
