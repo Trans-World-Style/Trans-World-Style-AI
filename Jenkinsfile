@@ -12,7 +12,7 @@ pipeline {
                 spec:
                   containers:
                   - name: docker
-                    image: docker:dind
+                    image: docker:20.10-dind
                     command: ["dockerd"]
                     args: ["--host=unix:///var/run/docker.sock", "--host=tcp://0.0.0.0:2375"]
                   securityContext:
