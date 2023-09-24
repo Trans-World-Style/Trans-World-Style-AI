@@ -57,6 +57,11 @@ pipeline {
                   containers:
                   - name: kaniko
                     image: gcr.io/kaniko-project/executor:latest
+                    command:
+                    - /bin/sh
+                    args:
+                    - -c
+                    - "sleep infinity"
                     imagePullPolicy: Always
                     tty: true
                 '''
