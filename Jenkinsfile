@@ -21,15 +21,15 @@ pipeline {
         }
     }
     environment {
-        DOCKERHUB_USER = params.dockerHubUser ?: 'dodo133'
-        DOCKERHUB_PASS = params.dockerHubPass ?: 'kay24125@'
+        DOCKERHUB_USER = 'dodo133'
+//         DOCKERHUB_PASS = 'kay24125@'
     }
     stages {
         stage('Build and Push') {
             steps {
                 script {
-                    def dockerImage = docker.build("${DOCKERHUB_USER}/your-image-name")
-                    docker.withRegistry('https://registry.hub.docker.com', 'dockerhub-credentials-id') {
+                    def dockerImage = docker.build("${DOCKERHUB_USER}/tws-ai")
+                    docker.withRegistry('https://registry.hub.docker.com', 'dockerhub-credentials') {
                         dockerImage.push('latest')
                     }
                 }
