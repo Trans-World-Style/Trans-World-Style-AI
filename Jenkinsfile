@@ -56,7 +56,7 @@ pipeline {
                 spec:
                   containers:
                   - name: kaniko
-                    image: busybox
+                    image: gcr.io/kaniko-project/executor:latest
                     imagePullPolicy: Always
                     tty: true
                 '''
