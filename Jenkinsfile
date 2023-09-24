@@ -52,7 +52,7 @@ pipeline {
                 kind: Pod
                 metadata:
                   labels:
-                    some-label: kaniko
+                    role: kaniko
                 spec:
                   containers:
                   - name: kaniko
