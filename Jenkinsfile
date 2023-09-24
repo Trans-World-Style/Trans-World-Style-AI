@@ -1,52 +1,123 @@
+// pipeline {
+//     agent {
+//         kubernetes {
+//             cloud "kubernetes-docker-job"
+//             yaml """
+//                 apiVersion: v1
+//                 kind: Pod
+//                 metadata:
+//                   namespace: jenkins
+//                   labels:
+//                     role: kanikoBuild
+//                 spec:
+//                   containers:
+//                   - name: kaniko
+//                     image: gcr.io/kaniko-project/executor:latest
+//                     args: ["--context=dir://workspace", "--dockerfile=Dockerfile", "--destination=dodo133/tws-ai:latest"]
+//                     volumeMounts:
+//                       - mountPath: "/kaniko/.docker/"
+//                         name: "docker-config"
+//                   volumes:
+//                     - name: docker-config
+//                       emptyDir: {}
+//                 """
+//         }
+//     }
+//     stages {
+//         stage('Build and Push') {
+//             steps {
+//                 container('kaniko') {
+//                     withCredentials([usernamePassword(credentialsId: 'dockerhub-credentials', usernameVariable: 'DOCKERHUB_USER', passwordVariable: 'DOCKERHUB_PASS')]) {
+//                         script {
+//                             sh """
+//                             echo '$DOCKERHUB_USER'
+//                             """
+//                             sh """
+//                             echo '$DOCKERHUB_PASS'
+//                             """
+// //                             sh """
+// //                                 echo '{ "auths": { "https://index.docker.io/v1/": { "auth": "$DOCKERHUB_USER:$DOCKERHUB_PASS" } } }' > /kaniko/.docker/config.json
+// //                             """
+// //                             // 이미지 빌드 및 푸시
+// //                             sh "/kaniko/executor --context dir://workspace --dockerfile=Dockerfile --destination=${DOCKERHUB_USER}/tws-ai:latest"
+//                         }
+//                     }
+//                 }
+//             }
+//         }
+//     }
+// }
 pipeline {
     agent {
         kubernetes {
             cloud "kubernetes-docker-job"
             yaml """
-                apiVersion: v1
-                kind: Pod
-                metadata:
-                  namespace: jenkins
-                  labels:
-                    role: kanikoBuild
-                spec:
-                  containers:
-                  - name: kaniko
-                    image: gcr.io/kaniko-project/executor:latest
-                    args: ["--context=dir://workspace", "--dockerfile=Dockerfile", "--destination=dodo133/tws-ai:latest"]
-                    volumeMounts:
-                      - mountPath: "/kaniko/.docker/"
-                        name: "docker-config"
-                  volumes:
-                    - name: docker-config
-                      emptyDir: {}
-                """
+            apiVersion: v1
+            kind: Pod
+            metadata:
+              labels:
+                role: kanikoBuild
+            spec:
+              initContainers:
+              - name: init-for-docker-config
+                image: busybox
+                command: ["/bin/sh", "-c", "echo '{ \"auths\": { \"https://index.docker.io/v1/\": { \"auth\": \"$DOCKERHUB_USER:$DOCKERHUB_PASS\" } } }' > /mnt/.docker/config.json"]
+                env:
+                - name: DOCKERHUB_USER
+                  valueFrom:
+                    secretKeyRef:
+                      name: dockerhub-secret
+                      key: username
+                - name: DOCKERHUB_PASS
+                  valueFrom:
+                    secretKeyRef:
+                      name: dockerhub-secret
+                      key: password
+                volumeMounts:
+                  - name: docker-config
+                    mountPath: /mnt/
+              containers:
+              - name: kaniko
+                image: gcr.io/kaniko-project/executor:latest
+                command:
+                - /busybox/cat
+                tty: true
+                volumeMounts:
+                  - name: docker-config
+                    mountPath: /kaniko/.docker/
+              volumes:
+              - name: docker-config
+                emptyDir: {}
+            """
         }
     }
     stages {
-        stage('Build and Push') {
+        stage('Make docker config') {
+            withCredentials([usernamePassword(credentialsId: 'dockerhub-credentials', usernameVariable: 'DOCKERHUB_USER', passwordVariable: 'DOCKERHUB_PASS')]) {
+                script {
+                    container('for-docker-config') {
+                        sh """
+                        echo '{ "auths": { "https://index.docker.io/v1/": { "auth": "$DOCKERHUB_USER:$DOCKERHUB_PASS" } } }' > /mnt/.docker/config.json
+                        """
+                    }
+                }
+            }
+        }
+        stage('Build and Push Image') {
             steps {
-                container('kaniko') {
-                    withCredentials([usernamePassword(credentialsId: 'dockerhub-credentials', usernameVariable: 'DOCKERHUB_USER', passwordVariable: 'DOCKERHUB_PASS')]) {
-                        script {
-                            sh """
-                            echo '$DOCKERHUB_USER'
-                            """
-                            sh """
-                            echo '$DOCKERHUB_PASS'
-                            """
-//                             sh """
-//                                 echo '{ "auths": { "https://index.docker.io/v1/": { "auth": "$DOCKERHUB_USER:$DOCKERHUB_PASS" } } }' > /kaniko/.docker/config.json
-//                             """
-//                             // 이미지 빌드 및 푸시
-//                             sh "/kaniko/executor --context dir://workspace --dockerfile=Dockerfile --destination=${DOCKERHUB_USER}/tws-ai:latest"
-                        }
+                script {
+                    // Dockerfile을 사용하여 이미지를 빌드하고 Docker Hub에 푸시
+                    container('kaniko') {
+                        sh """
+                            /bin/kaniko/executor --context=${WORKSPACE} --dockerfile=${WORKSPACE}/Dockerfile --destination=dodo133/tws-ai:latest
+                        """
                     }
                 }
             }
         }
     }
 }
+
 
 
 // pull & build & push
