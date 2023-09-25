@@ -129,6 +129,37 @@
 //     }
 // }
 @Library('tws-ci-library') _
+podTemplate(label: 'kaniko', cloud: 'kubernetes-docker-job', containers: [
+    containerTemplate(name: 'kaniko')
+]) {
+    environment {
+        DOCKERHUB_USERNAME = 'dodo133' // Docker Hub의 사용자 이름을 여기에 넣으세요.
+        IMAGE_NAME = 'tws-ai' // 원하는 이미지 이름을 여기에 넣으세요.
+    }
+    node('kaniko') {
+        stage('extract docker tag') {
+            steps {
+                script {
+                    env.DOCKER_TAG = extractDockerTag()
+                }
+            }
+        }
+        stage('Build and Push') {
+            steps {
+                container('kaniko') {
+                    script {
+//                         buildAndPush(DOCKERHUB_USERNAME, IMAGE_NAME, env.DOCKER_TAG)
+                        sh "ls /kaniko/.docker"
+
+                        sh """
+                        echo '${DOCKERHUB_USERNAME}/${IMAGE_NAME}:${env.DOCKER_TAG}'
+                        """
+                    }
+                }
+            }
+        }
+    }
+}
 pipeline {
     agent {
         kubernetes "kubernetes-docker-job"
