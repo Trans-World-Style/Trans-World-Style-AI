@@ -36,7 +36,7 @@ pipeline {
         DOCKERHUB_USERNAME = 'dodo133' // Docker Hub의 사용자 이름을 여기에 넣으세요.
         IMAGE_NAME = 'tws-ai' // 원하는 이미지 이름을 여기에 넣으세요.
         GIT_COMMIT_SHORT = sh(script: 'echo $GIT_COMMIT | cut -c 1-7', returnStdout: true).trim()
-        MANIFEST_REPO = 'git@github.com:Trans-World-Style/Trans-World-Style-Infra.git'  // 매니페스트 저장소의 URL을 여기에 입력
+        MANIFEST_REPO = 'Trans-World-Style/Trans-World-Style-Infra.git'  // 매니페스트 저장소의 URL을 여기에 입력
         MANIFEST_DIR = 'k8s/product/ai'  // 매니페스트 저장소를 체크아웃할 디렉토리
     }
     stages {
@@ -64,17 +64,18 @@ pipeline {
         stage('Update Manifests and Push to Git') {
             steps {
                 script {
-                    withCredentials([sshUserPrivateKey(credentialsId: 'github-app-credentials', keyFileVariable: 'GIT_SSH_KEY')]) {
-                        // 매니페스트 저장소 체크아웃
-                        sh "GIT_SSH_COMMAND='ssh -i ${GIT_SSH_KEY}' git clone ${MANIFEST_REPO} ${MANIFEST_DIR}"
+                    withCredentials([usernamePassword(credentialsId: 'dw-credential', passwordVariable: 'GIT_PASSWORD', usernameVariable: 'GIT_USERNAME')]) {
+                        sh "git clone https://${GIT_USERNAME}:${GIT_PASSWORD}@github.com/${MANIFEST_REPO} ${MANIFEST_DIR}"
+                    }
 
-                        // 매니페스트에서 이미지 태그 업데이트
-                        sh """
-                        sed -i 's|${DOCKERHUB_USERNAME}/${IMAGE_NAME}:.*|${DOCKERHUB_USERNAME}/${IMAGE_NAME}:${env.DOCKER_TAG}|' ${MANIFEST_DIR}/ai-deploy-gpu.yaml
-                        """
+                    // 매니페스트에서 이미지 태그 업데이트
+                    sh """
+                    sed -i 's|${DOCKERHUB_USERNAME}/${IMAGE_NAME}:.*|${DOCKERHUB_USERNAME}/${IMAGE_NAME}:${env.DOCKER_TAG}|' ${MANIFEST_DIR}/ai-deploy-gpu.yaml
+                    """
 
-                        // 변경된 매니페스트를 Git에 푸시
-                        dir(MANIFEST_DIR) {
+                    // 변경된 매니페스트를 Git에 푸시
+                    dir(MANIFEST_DIR) {
+                        withCredentials([usernamePassword(credentialsId: 'dw-credential', passwordVariable: 'GIT_PASSWORD', usernameVariable: 'GIT_USERNAME')]) {
                             sh """
                             git config user.name "DW-K"
                             git config user.email "pch145@naver.com"
