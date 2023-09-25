@@ -66,9 +66,8 @@ pipeline {
                 script {
                     withCredentials([usernamePassword(credentialsId: 'github-cridentials', passwordVariable: 'GIT_PASSWORD', usernameVariable: 'GIT_USERNAME')]) {
                         sh "git clone https://${GIT_USERNAME}:${GIT_PASSWORD}@github.com/${MANIFEST_REPO}"
-                        sh "ls -al"
                         sh """
-                        sed -i 's|${DOCKERHUB_USERNAME}/${IMAGE_NAME}:.*|${DOCKERHUB_USERNAME}/${IMAGE_NAME}:${env.DOCKER_TAG}|' ${MANIFEST_DIR}/ai-deploy-gpu.yaml
+                        sed -i 's|${DOCKERHUB_USERNAME}/${IMAGE_NAME}:.*|${DOCKERHUB_USERNAME}/${IMAGE_NAME}:test|' ${MANIFEST_DIR}/ai-deploy-gpu.yaml
                         """
                         dir(MANIFEST_DIR) {
                             sh """
