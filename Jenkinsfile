@@ -25,6 +25,7 @@ pipeline {
                     secretName: dockerhub-secret
                     items:
                     - key: config.json
+                      path: config.json
                 '''
         }
     }
@@ -45,7 +46,7 @@ pipeline {
                 container('kaniko') {
                     script {
 //                         buildAndPush(DOCKERHUB_USERNAME, IMAGE_NAME, env.DOCKER_TAG)
-//                         sh "ls /kaniko/.docker"
+                        sh "ls /kaniko/.docker"
 
                         sh """
                         echo '${DOCKERHUB_USERNAME}/${IMAGE_NAME}:${env.DOCKER_TAG}'
