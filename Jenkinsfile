@@ -61,27 +61,27 @@ pipeline {
                 }
             }
         }
-    }
-    stage('Update Manifests and Push to Git') {
-        steps {
-            script {
-                // 매니페스트 저장소 체크아웃
-                sh "git clone ${MANIFEST_REPO} ${MANIFEST_DIR}"
+        stage('Update Manifests and Push to Git') {
+            steps {
+                script {
+                    // 매니페스트 저장소 체크아웃
+                    sh "git clone ${MANIFEST_REPO} ${MANIFEST_DIR}"
 
-                // 매니페스트에서 이미지 태그 업데이트
-                sh """
-                sed -i 's|${DOCKERHUB_USERNAME}/${IMAGE_NAME}:.*|${DOCKERHUB_USERNAME}/${IMAGE_NAME}:${env.DOCKER_TAG}|' ${MANIFEST_DIR}/ai-deploy-gpu.yaml
-                """
-
-                // 변경된 매니페스트를 Git에 푸시
-                dir(MANIFEST_DIR) {
+                    // 매니페스트에서 이미지 태그 업데이트
                     sh """
-                    git config user.name "DW-K"
-                    git config user.email "pch145@naver.com"
-                    git add .
-                    git commit -m "Update image tag to ${env.DOCKER_TAG}"
-                    git push origin main
+                    sed -i 's|${DOCKERHUB_USERNAME}/${IMAGE_NAME}:.*|${DOCKERHUB_USERNAME}/${IMAGE_NAME}:${env.DOCKER_TAG}|' ${MANIFEST_DIR}/ai-deploy-gpu.yaml
                     """
+
+                    // 변경된 매니페스트를 Git에 푸시
+                    dir(MANIFEST_DIR) {
+                        sh """
+                        git config user.name "DW-K"
+                        git config user.email "pch145@naver.com"
+                        git add .
+                        git commit -m "Update image tag to ${env.DOCKER_TAG}"
+                        git push origin main
+                        """
+                    }
                 }
             }
         }
