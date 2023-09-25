@@ -64,7 +64,7 @@ pipeline {
         stage('Update Manifests and Push to Git') {
             steps {
                 script {
-                    withCredentials([usernamePassword(credentialsId: 'dw-credential', passwordVariable: 'GIT_PASSWORD', usernameVariable: 'GIT_USERNAME')]) {
+                    withCredentials([usernamePassword(credentialsId: 'github-cridentials', passwordVariable: 'GIT_PASSWORD', usernameVariable: 'GIT_USERNAME')]) {
                         sh "git clone https://${GIT_USERNAME}:${GIT_PASSWORD}@github.com/${MANIFEST_REPO} ${MANIFEST_DIR}"
                     }
 
@@ -75,7 +75,7 @@ pipeline {
 
                     // 변경된 매니페스트를 Git에 푸시
                     dir(MANIFEST_DIR) {
-                        withCredentials([usernamePassword(credentialsId: 'dw-credential', passwordVariable: 'GIT_PASSWORD', usernameVariable: 'GIT_USERNAME')]) {
+                        withCredentials([usernamePassword(credentialsId: 'github-cridentials', passwordVariable: 'GIT_PASSWORD', usernameVariable: 'GIT_USERNAME')]) {
                             sh """
                             git config user.name "DW-K"
                             git config user.email "pch145@naver.com"
