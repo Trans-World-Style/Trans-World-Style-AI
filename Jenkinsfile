@@ -37,7 +37,7 @@ pipeline {
         IMAGE_NAME = 'tws-ai' // 원하는 이미지 이름을 여기에 넣으세요.
         GIT_COMMIT_SHORT = sh(script: 'echo $GIT_COMMIT | cut -c 1-7', returnStdout: true).trim()
         MANIFEST_REPO = 'Trans-World-Style/Trans-World-Style-Infra.git'  // 매니페스트 저장소의 URL을 여기에 입력
-        MANIFEST_DIR = 'Trans-World-Style-Infra/k8s/product/ai'  // 매니페스트 저장소를 체크아웃할 디렉토리
+        MANIFEST_DIR = 'Trans-World-Style-Infra/k8s/product/ai/gpu'
     }
     stages {
         stage('extract docker tag') {
