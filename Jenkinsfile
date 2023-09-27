@@ -88,7 +88,6 @@
 @Library('tws-ci-library') _
 
 commonPipeline {
-    dockerhubUsername = 'dodo133'
     imageName = 'tws-ai'
     manifestRepo = 'Trans-World-Style/Trans-World-Style-Infra.git'
     manifestDir = 'k8s/product/ai/cpu'
@@ -105,3 +104,4 @@ commonPipeline {
         }
     ]
 }
+
