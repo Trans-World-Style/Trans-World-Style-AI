@@ -90,21 +90,13 @@
 commonPipeline {
     dockerhubUsername = 'dodo133'
     imageName = 'tws-ai'
-}
 
-pipeline {
-    agent any
-
-    stages {
-        stage('Update Manifests and Push to Git') {
-            steps {
-                script {
-                    sh """
-                    echo ${env.DOCKER_TAG}
-                    """
-                }
-            }
+    afterBuildStages = [
+        'Custom Stage 1': {
+            echo "env.DOCKER_TAG"
+        },
+        'Custom Stage 2': {
+            echo "This is custom stage 2"
         }
-    }
+    ]
 }
-
