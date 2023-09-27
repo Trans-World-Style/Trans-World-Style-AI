@@ -91,7 +91,7 @@ commonPipeline {
     dockerhubUsername = 'dodo133'
     imageName = 'tws-ai'
     manifestRepo = 'Trans-World-Style/Trans-World-Style-Infra.git'
-    manifestDir = 'Trans-World-Style-Infra/k8s/product/ai/cpu'
+    manifestDir = 'k8s/product/ai/cpu'
     manifestFile = 'ai-deploy-cpu.yaml'
 
 //     beforeBuildStages = []
