@@ -97,10 +97,11 @@ commonPipeline {
 
     afterBuildStages = [
         'Custom Stage 1': {
-            echo "stage1: ${env.DOCKER_TAG}"
+            sh "echo stage1: ${env.DOCKER_TAG}"
         },
         'Custom Stage 2': {
-            echo "This is custom stage 2"
+            sh "echo This is custom stage 2"
         }
     ]
 }
+
