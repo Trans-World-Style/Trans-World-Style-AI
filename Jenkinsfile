@@ -91,3 +91,20 @@ commonPipeline {
     dockerhubUsername = 'dodo133'
     imageName = 'tws-ai'
 }
+
+pipeline {
+    agent any
+
+    stages {
+        stage('Update Manifests and Push to Git') {
+            steps {
+                script {
+                    sh """
+                    echo ${env.DOCKER_TAG}
+                    """
+                }
+            }
+        }
+    }
+}
+
