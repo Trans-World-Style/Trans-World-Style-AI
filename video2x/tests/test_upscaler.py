@@ -21,7 +21,7 @@ def test_upscaling(input_url='./video2x/tests/data/jerry.mp4', output_url='./vid
         None,
         height,
         3,
-        1,
+        5,
         0,
         # "waifu2x", # gpu
         "realsr", # cpu
