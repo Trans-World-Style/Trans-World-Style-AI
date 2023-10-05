@@ -23,6 +23,7 @@ s3 = boto3.client(
     aws_secret_access_key=AWS_SECRET_KEY
 )
 
+task_running = False
 
 def download_file_from_s3(key):
     os.makedirs(os.path.dirname(key), exist_ok=True)
@@ -53,11 +54,14 @@ def process_file(key, new_key):
 
 @app.post("/upscale_video", include_in_schema=False)
 def process_video(key: str):
+    global task_running
+    task_running = True
     import time
     st = time.time()
 
     download_successful = download_file_from_s3(key)
     if not download_successful:
+        task_running = False
         return HTTPException(status_code=500, detail="S3 download failed")
 
     new_key = 'output/' + key.split('/')[-1]
@@ -71,11 +75,18 @@ def process_video(key: str):
 
     upload_successful = upload_file_to_s3(new_key)
     if not upload_successful:
+        task_running = False
         return HTTPException(status_code=500, detail="S3 upload failed")
 
     print(f'api running time: {time.time() - st}')
+    task_running = False
     return {"status": "successful", "result": new_key}
 
+@app.get("/readiness")
+def readiness():
+    if task_running:
+        raise HTTPException(status_code=500, detail="Task is running")
+    return {"status": "ready"}
 
 if __name__ == "__main__":
     uvicorn.run(app, host="0.0.0.0", port=8000)
