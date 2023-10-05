@@ -24,11 +24,13 @@ s3 = boto3.client(
 )
 
 task_running = False
+temp_file_name = 'temp.mp4'
 
 def download_file_from_s3(key):
+    global temp_file_name
     os.makedirs(os.path.dirname(key), exist_ok=True)
     try:
-        s3.download_file(Bucket=S3_BUCKET_NAME, Key=key, Filename=key)
+        s3.download_file(Bucket=S3_BUCKET_NAME, Key=key, Filename=temp_file_name)
         return True
     except NoCredentialsError:
         return False
@@ -44,9 +46,10 @@ def upload_file_to_s3(key):
 
 
 def process_file(key, new_key):
+    global temp_file_name
     # Placeholder for AI processing
     try:
-        test_upscaling(input_url=key, output_url=new_key, height=1080)
+        test_upscaling(input_url=temp_file_name, output_url=new_key, height=1080)
     except Exception as e:
             print(e)
     return new_key
